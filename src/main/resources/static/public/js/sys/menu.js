@@ -62,13 +62,19 @@ $(function() {
         striped: true,  //条纹相间的底格
         pagination: true,   //在表格底部显示分页工具栏
         sidePagination: 'server',  //设置在服务器端分页
+        toolbar: '#toolbar',    //将toolbar嵌入表格顶端
         columns: [{
             field: 'menuId',
             title: '序号',
-            formatter: function (value,row,index) {
-                return index+1;
+            formatter: function(value, row, index) {
+                var pageSize = $('#table').bootstrapTable('getOptions').pageSize;
+                var pageNumber = $('#table').bootstrapTable('getOptions').pageNumber;
+                return pageSize * (pageNumber - 1) + index + 1;
             }
-        }, {
+
+        },
+        {checkbox:true},
+        {
             field: 'name',
             title: '菜单名称'
         }, {
@@ -108,7 +114,56 @@ $(function() {
 });
 
 var vm = new Vue({
-    el:'#dtapp'
+    el:'#dtapp',
+    methods:{
+        add: function () {
+            console.log('add');
+        },
+        update: function () {
+            console.log('update');
+        },
+        del: function () {
+            console.log('del');
+
+            var rows =  getSelectedRows();
+            if (rows == null){
+                return;
+            }
+
+            layer.confirm('您确定要删除所选数据吗?',{
+                btn:['确定','取消'] //按钮
+            },function () {
+
+                var ids = new Array();
+                $.each(rows,function (i,row) {
+                    ids[i] = row['menuId'];
+                });
+                
+                //ajax提交
+                $.ajax({
+                    type:'POST',
+                    url: 'menu/del',
+                    data: JSON.stringify(ids),
+                    success: function (r) {
+
+                        if(r.code == 0){
+                            layer.alert(r.msg);
+
+                            //删除完刷新
+                            $('#table').bootstrapTable('refresh');
+                        }else {
+                            layer.alert(r.msg);
+                        }
+                    },
+                    error: function () {
+                        layer.alert('服务器没有返回数据，可能服务器忙，请稍后再试');
+                    }
+                })
+                
+                
+            })
+        }
+    }
 });
 /*
 

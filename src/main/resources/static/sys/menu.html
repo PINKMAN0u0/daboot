@@ -14,6 +14,22 @@
 </head>
 <body>
 <div id="dtapp" v-cloak>
+
+    <div id="toolbar">
+        <button class="btn btn-success" type="button" @click="add">
+            <i class="fa fa-plus"></i>
+            <span class="bold">新增</span>
+        </button>
+        <button class="btn btn-success" type="button" @click="update">
+            <i class="fa fa-pencil-square-o"></i>
+            <span class="bold">修改</span>
+        </button>
+        <button class="btn btn-danger" type="button" @click="del">
+            <i class="fa fa-remove"></i>
+            <span class="bold">删除</span>
+        </button>
+    </div>
+
     <table id="table"></table>
 </div>
 <!--

@@ -76,4 +76,11 @@ public interface SysMenuMapper {
      * @return: int
      */
     int queryTotal();
+
+    /**
+     * @description: 批量删除
+     * @param id
+     * @return: int
+     */
+    int deleteBath(Long[] id);
 }

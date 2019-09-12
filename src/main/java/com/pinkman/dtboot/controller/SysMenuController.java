@@ -4,11 +4,9 @@ import com.pinkman.dtboot.entity.SysMenu;
 import com.pinkman.dtboot.service.SysMenuService;
 import com.pinkman.dtboot.utils.DataGridResult;
 import com.pinkman.dtboot.utils.Query;
+import com.pinkman.dtboot.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -37,5 +35,24 @@ public class SysMenuController {
 
         DataGridResult r = sysMenuService.getPageList(query);
         return r;
+    }
+
+    /**
+     * @description: 根据menuId批量删除
+     * @param menuIds
+     * @return: com.pinkman.dtboot.utils.R
+     */
+    @PostMapping("/del")
+    public R DeleteBatch(@RequestBody Long[] menuIds){
+
+        for (Long menuId : menuIds){
+            System.out.println("=-=-=-=-="+menuId+"=-=-=-=-=");
+            if (menuId <= 31){
+                return R.error("系统菜单，不能删除");
+            }
+        }
+
+        sysMenuService.deleteBath(menuIds);
+        return R.ok("删除成功");
     }
 }

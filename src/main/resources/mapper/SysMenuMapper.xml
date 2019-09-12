@@ -169,7 +169,8 @@
     order by m.order_num asc
   </select>
 
-  <select id="queryList" resultType="com.pinkman.dtboot.entity.SysMenu">
+  <!--parameterType 参数可以自动识别，可以不用加-->
+  <select id="queryList" resultType="com.pinkman.dtboot.entity.SysMenu" parameterType="com.pinkman.dtboot.utils.Query">
     select
         menu_id as menuId,
         parent_id as parentId,
@@ -186,4 +187,16 @@
   <select id="queryTotal" resultType="int">
     select count(*) from sys_menu
   </select>
+
+  <delete id="deleteBath">
+    delete from sys_menu where menu_id in
+    <foreach collection="array" item="menuId" open="(" close=")" separator=",">
+        #{menuId}
+    </foreach>
+    ;
+    delete from sys_role_menu where menu_id in
+    <foreach collection="array" item="menuId" open="(" close=")" separator=",">
+      #{menuId}
+    </foreach>
+  </delete>
 </mapper>

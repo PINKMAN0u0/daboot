@@ -4,12 +4,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 查询参数
- *
+ * 处理查询参数
+ * 此类继承了LinkedHashMap
+ * 相当于此类也为Map
  */
 public class Query extends LinkedHashMap<String, Object> {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 构造函数，将传入的map中的两个参数转为整型
+	 * @param params
+	 * @return:
+	 */
     public Query(Map<String, Object> params){
         this.putAll(params);
 

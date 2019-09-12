@@ -36,4 +36,9 @@ public class SysMenuServiceImpl implements SysMenuService {
 
         return dataGridResult;
     }
+
+    @Override
+    public void deleteBath(Long[] ids) {
+        sysMenuMapper.deleteBath(ids);
+    }
 }

@@ -17,4 +17,5 @@ public interface SysMenuService {
 
     DataGridResult getPageList(Query query);
 
+    void deleteBath(Long[] ids);
 }
