@@ -8,6 +8,7 @@
         <version>1.5.10.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.pinkman</groupId>
     <artifactId>dtboot</artifactId>
     <version>0.0.1</version>
