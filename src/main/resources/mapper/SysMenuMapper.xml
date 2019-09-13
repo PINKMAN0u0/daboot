@@ -172,11 +172,7 @@
   <!--parameterType 参数可以自动识别，可以不用加-->
   <select id="queryList" resultType="com.pinkman.dtboot.entity.SysMenu" parameterType="com.pinkman.dtboot.utils.Query">
     select
-        menu_id as menuId,
-        parent_id as parentId,
-        name,url,perms,type,icon,
-        order_num as orderNum,
-        (select p.name from sys_menu p where p.menu_id = m.parent_id) as parentName
+        *,(select p.name from sys_menu p where p.menu_id = m.parent_id) as parentName
     from sys_menu m
     order by m.order_num asc
     <if test="offset!=null and limit != null">
@@ -199,4 +195,9 @@
       #{menuId}
     </foreach>
   </delete>
+
+  <select id="queryNoButtonList" resultType="com.pinkman.dtboot.entity.SysMenu">
+    select * from sys_menu where type != 2 order by order_num asc
+  </select>
+
 </mapper>

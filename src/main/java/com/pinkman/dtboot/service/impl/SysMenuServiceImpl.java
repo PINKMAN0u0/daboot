@@ -7,6 +7,8 @@ import com.pinkman.dtboot.utils.DataGridResult;
 import com.pinkman.dtboot.utils.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,7 +40,31 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteBath(Long[] ids) {
         sysMenuMapper.deleteBath(ids);
     }
+
+    @Override
+    public List<SysMenu> queryNoButtonList() {
+        return sysMenuMapper.queryNoButtonList();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void save(SysMenu sysMenu) {
+        sysMenuMapper.insertSelective(sysMenu);
+    }
+
+    @Override
+    public SysMenu queryObject(Long menuId) {
+        return sysMenuMapper.selectByPrimaryKey(menuId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void update(SysMenu sysMenu) {
+        sysMenuMapper.updateByPrimaryKey(sysMenu);
+    }
+
 }

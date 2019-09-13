@@ -115,12 +115,39 @@ $(function() {
 
 var vm = new Vue({
     el:'#dtapp',
+    data:{
+        showList: true,
+        title: '',
+        menu: {}
+    },
     methods:{
         add: function () {
             console.log('add');
+            vm.showList = false;
+            vm.title='新增';
+            vm.menu = {type:1, parentName:null, parentId:0, orderNum: 0};
+            //初始化ztree
+            vm.getMenu();
         },
         update: function () {
             console.log('update');
+
+            var row = getSelectedRow();
+            var menuId =row['menuId'];
+            if (menuId == null){
+                return;
+            }
+
+            $.get('menu/info/' + menuId,function (r) {
+                vm.showList = false;
+                vm.title = "修改";
+                vm.menu = r.menu;
+                vm.menu.parentName = row.parentName;
+                vm.getMenu();
+            })
+
+            //初始化ztree
+            // vm.getMenu();
         },
         del: function () {
             console.log('del');
@@ -149,7 +176,7 @@ var vm = new Vue({
                         if(r.code == 0){
                             layer.alert(r.msg);
 
-                            //删除完刷新
+                            //刷新
                             $('#table').bootstrapTable('refresh');
                         }else {
                             layer.alert(r.msg);
@@ -162,6 +189,82 @@ var vm = new Vue({
                 
                 
             })
+        },
+        saveOrUpdate: function () {
+            var url = vm.menu.menuId == null ? 'menu/save' : 'menu/update';
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(vm.menu),
+                success: function (r) {
+
+                    if (r.code == 0){
+                        layer.alert(r.msg,function (index) {
+                            layer.close(index);
+                            vm.reload();
+                        });
+
+                    }else {
+                        layer.alert(r.msg);
+                    }
+                }
+            })
+
+        },
+        reload: function () {
+            vm.showList = true;
+            $('#table').bootstrapTable('refresh');
+        },
+        menuTree: function () {
+            //layer弹窗
+            layer.open({
+                type: 1,
+                offset: '50px',  //右下角弹出
+                skin: 'layui-layer-molv', //样式类名
+                title: '选择菜单',
+                area: ['300px','450px'],
+                shade: 0,
+                shadeClose: false, //开启遮罩关闭
+                btn:['确定','取消'],
+                btn1: function(index){
+                    var treeObj = $.fn.zTree.getZTreeObj("menuTree")
+                    var nodes = treeObj.getSelectedNodes();
+
+                    //回填数据
+                    vm.menu.parentName = nodes[0].name;
+                    vm.menu.parentId = nodes[0].menuId;
+                    //关闭浮层
+                    layer.close(index);
+                },
+                content: jQuery('#menuLayer')
+            });
+        },
+        //获取ztree
+        getMenu: function () {
+
+            var setting = {
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: 'menuId',
+                        pIdKey: 'parentId',
+                        rootPId: -1
+                    },
+                    key: {
+                        url: "nonourl"
+                    }
+                }
+            };
+
+            $.get('menu/select',function (r) {
+                var treeObj = $.fn.zTree.init($("#menuTree"), setting, r.menuList);
+
+                var node = treeObj.getNodeByParam("menuId",vm.menu.parentId);
+                treeObj.selectNode(node);
+            })
+
+
+
         }
     }
 });

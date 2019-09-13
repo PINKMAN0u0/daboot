@@ -55,4 +55,59 @@ public class SysMenuController {
         sysMenuService.deleteBath(menuIds);
         return R.ok("删除成功");
     }
+
+    /**
+     * @description: 返回没有按钮节点的目录列表
+     * @param
+     * @return: com.pinkman.dtboot.utils.R
+     */
+    @GetMapping("/select")
+    public R select(){
+
+        List<SysMenu> sysMenus = sysMenuService.queryNoButtonList();
+
+        SysMenu root = new SysMenu();
+        root.setMenuId(0L);
+        root.setName("一级菜单");
+        root.setParentId(-1L);
+        root.setOpen(true);
+
+        sysMenus.add(root);
+
+
+        return R.ok().put("menuList",sysMenus);
+    }
+
+    /**
+     * @description: 将传入的menu数据存入数据库
+     * @param menu
+     * @return: com.pinkman.dtboot.utils.R
+     */
+    @PostMapping("/save")
+    public R save(@RequestBody SysMenu menu){
+        sysMenuService.save(menu);
+        return R.ok("保存成功");
+    }
+
+    /**
+     * @description: 返回选中目录信息
+     * @param menuId
+     * @return: com.pinkman.dtboot.utils.R
+     */
+    @GetMapping("/info/{menuId}")
+    public R info(@PathVariable("menuId") Long menuId){
+        SysMenu sysMenu = sysMenuService.queryObject(menuId);
+        return R.ok().put("menu",sysMenu);
+    }
+
+    /**
+     * @description: 修改数据
+     * @param menu
+     * @return: com.pinkman.dtboot.utils.R
+     */
+    @PostMapping("/update")
+    public R update(@RequestBody SysMenu menu){
+        sysMenuService.update(menu);
+        return R.ok("修改成功");
+    }
 }

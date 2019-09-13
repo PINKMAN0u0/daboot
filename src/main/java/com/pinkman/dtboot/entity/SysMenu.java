@@ -348,6 +348,17 @@ public class SysMenu implements Serializable {
     /*================扩展的列=======================*/
     private String parentName;
 
+    //ztree扩展的列
+    private Boolean open;
+
+    public Boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
+    }
+
     public String getParentName() {
         return parentName;
     }

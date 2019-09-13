@@ -83,4 +83,11 @@ public interface SysMenuMapper {
      * @return: int
      */
     int deleteBath(Long[] id);
+
+    /**
+     * @description: 获取不包含按钮的节点列表
+     * @param
+     * @return: java.util.List<com.pinkman.dtboot.entity.SysMenu>
+     */
+    List<SysMenu> queryNoButtonList();
 }

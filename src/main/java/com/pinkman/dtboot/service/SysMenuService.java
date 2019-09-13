@@ -18,4 +18,12 @@ public interface SysMenuService {
     DataGridResult getPageList(Query query);
 
     void deleteBath(Long[] ids);
+
+    List<SysMenu> queryNoButtonList();
+
+    void save(SysMenu sysMenu);
+
+    SysMenu queryObject(Long menuId);
+
+    void update(SysMenu sysMenu);
 }

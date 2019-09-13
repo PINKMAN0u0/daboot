@@ -1,6 +1,8 @@
 //ajax全局配置
 $.ajaxSetup({
+    //提交的返回类型
     dataType: "json",
+    //返回的数据类型
     contentType: "application/json",
     cache: false
 });
