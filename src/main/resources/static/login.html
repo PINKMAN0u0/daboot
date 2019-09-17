@@ -90,6 +90,7 @@ var vm = new Vue({
     },
 	methods: {
 		refreshCode: function(){
+		    //避免缓存
             this.src = "captcha.jpg?t=" + $.now();
 		},
 		login: function (event) {
