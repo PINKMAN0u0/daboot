@@ -1,6 +1,6 @@
 package com.pinkman.dtboot.utils;
 
-import com.qfedu.dtboot.entity.SysUser;
+import com.pinkman.dtboot.entity.SysUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
