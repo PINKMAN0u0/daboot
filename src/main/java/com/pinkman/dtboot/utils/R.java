@@ -2,7 +2,11 @@ package com.pinkman.dtboot.utils;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * @description:
+ * @author: PINKMAN
+ * @create: 2019-09-10 22:59
+ **/
 public class R extends HashMap<String, Object> {
 	private static final long serialVersionUID = 1L;
 	

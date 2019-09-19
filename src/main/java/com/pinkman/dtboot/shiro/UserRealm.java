@@ -1,11 +1,13 @@
 package com.pinkman.dtboot.shiro;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
+import com.pinkman.dtboot.entity.SysUser;
+import com.pinkman.dtboot.service.SysUserService;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,18 +18,50 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserRealm extends AuthorizingRealm {
 
+    @Autowired
+    private SysUserService sysUserService;
+
     /**
      * @description: 认证
-     * @param authenticationToken
+     * @param token
      * @return: org.apache.shiro.authc.AuthenticationInfo
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 
         System.out.println("认证");
 
+        ///用户输入的用户名和密码
+        String usernameInput = (String)token.getPrincipal();
+        //要先以字符获取再拼接成字符串
+        String passwordInput = new String((char[])token.getCredentials());
 
-        return null;
+        //查询用户是否存在
+        SysUser user = sysUserService.queryByUserName(usernameInput);
+
+        if(user == null){
+            throw new UnknownAccountException("账号或密码不正确");
+        }
+
+        ///从数据库中取出的用户名和密码
+        String username = user.getUsername();
+        String password = user.getPassword();
+
+        //判断密码是否正确
+        if (!passwordInput.equals(password)) {
+            throw new UnknownAccountException("账号或密码不正确");
+        }
+
+        //判断账号是否被锁定
+        if (user.getStatus() == 0) {
+            throw new LockedAccountException("账号已被锁定,请联系管理员");
+        }
+
+        //将数据库中取出的password与token中的password进行比较
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo( username, password, this.getName());
+
+
+        return info;
     }
 
     /**
@@ -39,7 +73,6 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
 
         System.out.println("授权");
-
 
 
         return null;

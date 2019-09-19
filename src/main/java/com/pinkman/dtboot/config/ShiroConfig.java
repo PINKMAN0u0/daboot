@@ -1,7 +1,7 @@
 package com.pinkman.dtboot.config;
 
 import com.pinkman.dtboot.shiro.UserRealm;
-import org.apache.commons.collections.map.LinkedMap;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -54,10 +54,10 @@ public class ShiroConfig {
     @Bean
     public SecurityManager securityManager(UserRealm userRealm, SessionManager sessionManager){
 
+
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(userRealm);
         securityManager.setSessionManager(sessionManager);
-
 
         return securityManager;
     }
@@ -86,7 +86,7 @@ public class ShiroConfig {
         filterMap.put("/public/**", "anon");
         filterMap.put("/login.html", "anon");
         filterMap.put("/sys/login", "anon");
-        filterMap.put("/captcha.jpg", "anon");
+        filterMap.put("/kaptcha.jpg", "anon");
         //  "authc"该过滤器下的页面必须验证后才能访问，它实际是shiro内部的一个拦截器
         filterMap.put("/**", "authc");
 
