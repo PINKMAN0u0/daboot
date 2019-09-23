@@ -41,15 +41,15 @@ var vm = new Vue({
 	},
 	methods: {
 		getMenuList: function (event) {
-            $.getJSON("json/menu_user.json?_"+$.now(), function(r){
-			/*$.getJSON("sys/menu/user?_"+$.now(), function(r){*/
+            /*$.getJSON("json/menu_user.json?_"+$.now(), function(r){*/
+			$.getJSON("sys/menu/user?_"+$.now(), function(r){
 				vm.menuList = r.menuList;
                 window.permissions = r.permissions;
 			});
 		},
 		getUser: function(){
-            $.getJSON("json/user_info.json?_"+$.now(), function(r){
-			/*$.getJSON("sys/user/info?_"+$.now(), function(r){*/
+            /*$.getJSON("json/user_info.json?_"+$.now(), function(r){*/
+			$.getJSON("sys/user/info?_"+$.now(), function(r){
 				vm.user = r.user;
 			});
 		},

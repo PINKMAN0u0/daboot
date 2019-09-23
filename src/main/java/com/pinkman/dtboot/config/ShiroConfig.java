@@ -2,6 +2,8 @@ package com.pinkman.dtboot.config;
 
 import com.pinkman.dtboot.shiro.UserRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -59,6 +61,9 @@ public class ShiroConfig {
         securityManager.setRealm(userRealm);
         securityManager.setSessionManager(sessionManager);
 
+        //设置缓存
+        securityManager.setCacheManager(CacheManager());
+
         return securityManager;
     }
 
@@ -78,7 +83,7 @@ public class ShiroConfig {
         //认证成功跳转到主页
         shiroFilter.setSuccessUrl("/index.html");
         //未授权时跳转链接
-        shiroFilter.setUnauthorizedUrl("noauth.html");
+        shiroFilter.setUnauthorizedUrl("/json/unauthorized.json");
 
         Map<String, String> filterMap = new LinkedHashMap<>();
         ///  "anon"什么都不做,直接放行
@@ -87,14 +92,36 @@ public class ShiroConfig {
         filterMap.put("/login.html", "anon");
         filterMap.put("/sys/login", "anon");
         filterMap.put("/kaptcha.jpg", "anon");
+
+        //校验,具有admin角色的用户可以访问 /sys/menu/del
+        //filterMap.put("/sys/menu/del","roles[admin]");
+        //具有perms[sys:menu:update] 资源权限的用户可以访问/sys/menu/update
+        //filterMap.put("/sys/menu/update", "perms[sys:menu:update]");
+
+
         //  "authc"该过滤器下的页面必须验证后才能访问，它实际是shiro内部的一个拦截器
-        filterMap.put("/**", "authc");
+        //filterMap.put("/**", "authc"); //不支持remeberMe
+        //通过“记住我”访问
+        filterMap.put("/**", "user");
 
         shiroFilter.setFilterChainDefinitionMap(filterMap);
 
         return shiroFilter;
 
     }
+
+    /**
+     * @description: 设置缓存配置文件
+     * @param
+     * @return: org.apache.shiro.cache.ehcache.EhCacheManager
+     */
+    @Bean
+    EhCacheManager CacheManager(){
+        EhCacheManager cacheManager = new EhCacheManager();
+        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
+        return cacheManager;
+    }
+
 
     /**
      * @description: Shiro生命周期处理器 ---可以自定的来调用配置在 Spring IOC 容器中 shiro bean 的生命周期方法.

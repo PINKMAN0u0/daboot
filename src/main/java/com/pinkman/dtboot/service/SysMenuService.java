@@ -26,4 +26,9 @@ public interface SysMenuService {
     SysMenu queryObject(Long menuId);
 
     void update(SysMenu sysMenu);
+
+    /**
+     * 获取用户菜单列表
+     */
+    List<SysMenu> getUserMenuList(Long userId);
 }

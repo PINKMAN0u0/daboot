@@ -64,14 +64,14 @@ public class SysLoginController{
      * @return: com.pinkman.dtboot.utils.R
      */
     @ResponseBody
-    @RequestMapping(value = "/sys/login", method = RequestMethod.POST)
-    public R login(@RequestBody(required=true) Map map){
+    @PostMapping("/sys/login")
+    public R login(@RequestBody Map<String, String> map){
 
         System.out.println(map);
-        String username = map.get("username").toString();
-        String password = map.get("password").toString();
-        String kaptcha = map.get("kaptcha").toString();
-
+        String username = map.get("username");
+        String password = map.get("password");
+        String kaptcha = map.get("kaptcha");
+        String rememberMe = map.get("rememberMe");
 
         //获取系统中的验证码信息
         String kaptchaReal = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
@@ -81,6 +81,12 @@ public class SysLoginController{
             return R.error("验证码不正确");
         }
 
+        //判断remeberMe是否为空并赋值
+        boolean remember = false;
+        if (rememberMe != null) {
+            remember = true;
+        }
+
         Subject subject = ShiroUtils.getSubject();
 
         try {
@@ -88,6 +94,7 @@ public class SysLoginController{
             String md5Password = new Md5Hash(password,username,1024).toHex();
             //生成令牌
             UsernamePasswordToken token = new UsernamePasswordToken(username, md5Password);
+            token.setRememberMe(remember);
             subject.login(token);
         } catch (UnknownAccountException e) {
             return R.error(e.getMessage());
@@ -101,6 +108,18 @@ public class SysLoginController{
 
 
         return R.ok();
+    }
+
+    /**
+     * @description: 登出功能实现
+     * @param
+     * @return: java.lang.String
+     */
+    @GetMapping("/logout")
+    public String logout(){
+        ShiroUtils.logout();
+
+        return "redirect:login.html";
     }
 
 }

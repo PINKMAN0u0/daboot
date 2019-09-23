@@ -1,6 +1,7 @@
 package com.pinkman.dtboot.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SysMenu implements Serializable {
     /**
@@ -351,6 +352,17 @@ public class SysMenu implements Serializable {
     //ztree扩展的列
     private Boolean open;
 
+    //迭代获取子菜单
+    private List<SysMenu> list;
+
+    public List<SysMenu> getList() {
+        return list;
+    }
+
+    public void setList(List<SysMenu> list) {
+        this.list = list;
+    }
+
     public Boolean getOpen() {
         return open;
     }
@@ -366,5 +378,6 @@ public class SysMenu implements Serializable {
     public void setParentName(String parentName) {
         this.parentName = parentName;
     }
+
 
 }

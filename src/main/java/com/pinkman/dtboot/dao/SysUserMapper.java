@@ -3,6 +3,8 @@ package com.pinkman.dtboot.dao;
 import com.pinkman.dtboot.entity.SysUser;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component(value = "sysUserMapper")
 public interface SysUserMapper {
     /**
@@ -60,4 +62,17 @@ public interface SysUserMapper {
      */
     SysUser queryByUserName(String username);
 
+    /**
+     * @description: 根据userId获取用户的所有权限
+     * @param userId
+     * @return: java.util.List<java.lang.String>
+     */
+    List<String> queryAllPermsById(Long userId);
+
+    /**
+     * @description: 根据userId获取用户具有权限的所有菜单列表
+     * @param userId
+     * @return: java.util.List<java.lang.Long>
+     */
+    List<Long> queryAllMenuIdByUserId(Long userId);
 }

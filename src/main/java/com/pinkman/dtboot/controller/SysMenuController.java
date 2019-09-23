@@ -2,14 +2,18 @@ package com.pinkman.dtboot.controller;
 
 import com.pinkman.dtboot.entity.SysMenu;
 import com.pinkman.dtboot.service.SysMenuService;
+import com.pinkman.dtboot.service.SysUserService;
 import com.pinkman.dtboot.utils.DataGridResult;
 import com.pinkman.dtboot.utils.Query;
 import com.pinkman.dtboot.utils.R;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @description:
@@ -18,10 +22,13 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("/sys/menu")
-public class SysMenuController {
+public class SysMenuController extends AbstractController{
 
     @Autowired
     private SysMenuService sysMenuService;
+
+    @Autowired
+    private SysUserService sysUserService;
 
     @GetMapping("/listall")
     public List<SysMenu> getAll(){
@@ -43,6 +50,8 @@ public class SysMenuController {
      * @return: com.pinkman.dtboot.utils.R
      */
     @PostMapping("/del")
+    //需要的资源权限
+    @RequiresPermissions(value = {"sys:menu:delete"})
     public R DeleteBatch(@RequestBody Long[] menuIds){
 
         for (Long menuId : menuIds){
@@ -106,10 +115,23 @@ public class SysMenuController {
      * @return: com.pinkman.dtboot.utils.R
      */
     @PostMapping("/update")
+    @RequiresPermissions({"sys:menu:update"})
     public R update(@RequestBody SysMenu menu){
         sysMenuService.update(menu);
         return R.ok("修改成功");
     }
 
+    /**
+     * @description: 用户菜单列表
+     * @param
+     * @return: com.pinkman.dtboot.utils.R
+     */
+    @GetMapping("/user")
+    public R user(){
+        List<SysMenu> menuList = sysMenuService.getUserMenuList(getUserId());
+        Set<String> permissions = sysUserService.getUserPermissionsById(getUserId());
+
+        return R.ok().put("menuList", menuList).put("permissions", permissions);
+    }
 
 }

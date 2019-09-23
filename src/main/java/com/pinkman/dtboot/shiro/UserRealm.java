@@ -7,8 +7,13 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @description:
@@ -58,7 +63,7 @@ public class UserRealm extends AuthorizingRealm {
         }
 
         //将数据库中取出的password与token中的password进行比较
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo( username, password, this.getName());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo( user, password, this.getName());
 
 
         return info;
@@ -66,16 +71,23 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * @description: 授权
-     * @param principalCollection
+     * @param principal
      * @return: org.apache.shiro.authz.AuthorizationInfo
      */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
         System.out.println("授权");
+        //获取当前角色对象信息
+        SysUser user = (SysUser) principal.getPrimaryPrincipal();
 
+        //根据用户id从数据库获取当前用户角色的所有权限
+        Set<String> userPermissions = sysUserService.getUserPermissionsById(user.getUserId());
 
-        return null;
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        //资源授权
+        info.addStringPermissions(userPermissions);
+
+        return info;
     }
 
 

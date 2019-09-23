@@ -91,4 +91,11 @@ public interface SysMenuMapper {
      * @return: java.util.List<com.pinkman.dtboot.entity.SysMenu>
      */
     List<SysMenu> queryNoButtonList();
+
+    /**
+     * @description: 根据父id获取子菜单
+     * @param parentId
+     * @return: java.util.List<com.pinkman.dtboot.entity.SysMenu>
+     */
+    List<SysMenu> queryListParentId(Long parentId);
 }
