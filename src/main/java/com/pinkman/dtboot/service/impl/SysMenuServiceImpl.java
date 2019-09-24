@@ -82,10 +82,10 @@ public class SysMenuServiceImpl implements SysMenuService {
             return getAllMenuList(null);
         }
 
-        //用户菜单列表
-        List<Long> menuIdList = sysUserMapper.queryAllMenuIdByUserId(userId);
+        //用户菜单id列表
+        List<Long> userMenuIdList = sysUserMapper.queryAllMenuIdByUserId(userId);
 
-        return getAllMenuList(menuIdList);
+        return getAllMenuList(userMenuIdList);
     }
 
     /**
@@ -98,6 +98,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 
         //根据父id获取子菜单列表
         List<SysMenu> menuList = sysMenuMapper.queryListParentId(parentId);
+
         if (menuIdList == null) { //如果menuIdList==null,就不进行权限的过滤
             return menuList;
         }
@@ -135,17 +136,17 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     /**
-     * @description: 获取所有菜单列表
-     * @param menuIdList
+     * @description: 获取用户的所有菜单列表
+     * @param userMenuIdList
      * @return: java.util.List<com.pinkman.dtboot.entity.SysMenu>
      */
-    private  List<SysMenu> getAllMenuList(List<Long> menuIdList) {
+    private  List<SysMenu> getAllMenuList(List<Long> userMenuIdList) {
 
         //获取顶层节点列表
-        List<SysMenu> menuList = queryListParentId(0L, menuIdList);
+        List<SysMenu> menuList = queryListParentId(0L, userMenuIdList);
 
         //递归获取子菜单
-        getMenuTreeList(menuList, menuIdList);
+        getMenuTreeList(menuList, userMenuIdList);
 
         return menuList;
 
