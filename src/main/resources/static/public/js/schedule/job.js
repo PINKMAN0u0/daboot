@@ -66,7 +66,9 @@ var vm = new Vue({
             });
         },
         saveOrUpdate: function () {
+            //根据是否有jobId来判断做新增还是修改操作
             var url = vm.scheduleJob.jobId == null ? "../schedule/job/save" : "../schedule/job/update";
+            //将输入的信息发送给后台，并展示返回的数据
             $.ajax({
                 type: "POST",
                 url: url,

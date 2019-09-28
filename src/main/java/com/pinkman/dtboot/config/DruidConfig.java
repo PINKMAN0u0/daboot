@@ -4,6 +4,7 @@ import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.wall.WallConfig;
 import com.alibaba.druid.wall.WallFilter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ public class DruidConfig {
     @Bean
     //配置数据源
     @ConfigurationProperties(prefix = "spring.datasource")
+    @Qualifier("druidDataSource")
     public DataSource druidDataSource(){
         System.out.println("------------------DruidDataSource---------------");
         DruidDataSource dataSource = new DruidDataSource();

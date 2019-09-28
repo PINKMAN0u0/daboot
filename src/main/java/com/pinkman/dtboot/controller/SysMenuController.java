@@ -1,5 +1,6 @@
 package com.pinkman.dtboot.controller;
 
+import com.pinkman.dtboot.annotation.MyLog;
 import com.pinkman.dtboot.entity.SysMenu;
 import com.pinkman.dtboot.service.SysMenuService;
 import com.pinkman.dtboot.service.SysUserService;
@@ -49,7 +50,10 @@ public class SysMenuController extends AbstractController{
      * @param menuIds
      * @return: com.pinkman.dtboot.utils.R
      */
+
     @PostMapping("/del")
+    //log切面的切入点位置
+    @MyLog("删除菜单记录")
     //需要的资源权限
     @RequiresPermissions(value = {"sys:menu:delete"})
     public R DeleteBatch(@RequestBody Long[] menuIds){

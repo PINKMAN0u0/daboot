@@ -36,6 +36,7 @@ function getSelectedRow() {
     return rows[0];
 }
 
+//判断是否有权限
 function hasPermission(permission) {
     if (window.parent.permissions.indexOf(permission) > -1) {
         return true;
@@ -44,6 +45,7 @@ function hasPermission(permission) {
     }
 }
 
+//执行任务
 function doTask(id, msg, url){
     var rows = getSelectedRows();
     if(rows == null){
